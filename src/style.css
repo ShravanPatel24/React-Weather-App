@@ -8,33 +8,33 @@
 body {
     font-family: "Poppins";
     margin: 0;
-    background-color: rgb(152, 179, 234);
+    background-color: rgb(191, 235, 245);
+    overflow: hidden;
 }
 
 .container {
-    max-width: 1600px;
     margin: 0 auto;
     width: 95%;
 }
 
 .text-header {
     padding: 20px;
-    margin-bottom: 40px;
+    margin: 40px;
     font-size: 25px;
     font-weight: 700;
-    margin-top: 20px;
     color: rgb(22, 81, 124);
 }
 
+/****************** Weather Component Styles ***************/
+
 .weather {
-    width: 380px;
+    width: 400px;
     padding: 30px;
-    border-radius: 10px;
+    border-radius: 20px;
     text-align: center;
     color: white;
     background: linear-gradient(130deg, rgb(83, 83, 183), rgb(25, 114, 58));
     margin: 0 auto;
-    /* Center the .weather class horizontally */
 }
 
 .search {
@@ -67,6 +67,8 @@ body {
     cursor: pointer;
 }
 
+/********** Weather Component - Image Search Button *********/
+
 .serch button img {
     width: 100%;
 }
@@ -91,19 +93,24 @@ body {
 
 }
 
-/* .name-city {
-    margin-top: 20px;
-} */
+.name-city {
+   padding: 20px;
+}
 
 .name-city h2 {
     font-size: 40px;
     font-weight: 700;
+    color: #efcaca;
+
 }
 
 .name-city p {
     font-size: 30px;
     font-weight: 500;
+    color: #dfb7b7;
 }
+
+/********** Weather Component - Weather Details **********/
 
 .details {
     display: flex;
@@ -115,9 +122,9 @@ body {
     height: 50px;
     width: 50px;
     margin-right: 12px;
+    
 }
-
-.humidity img {
+.humidity img{
     width: 100%;
 }
 
@@ -140,25 +147,48 @@ details .col img {
 
 .text-humidity {
     font-size: 20px;
+    color: #efcaca;
 }
-
-.humidity-name {
+.humidity-name{
     font-size: 15px;
-    color: rgb(219, 205, 205);
+    color:rgb(219, 205, 205);
 }
-
-.text-wind {
+.text-wind{
     font-size: 20px;
-}
+    color: #efcaca;
 
-.wind-name {
+}
+.wind-name{
     font-size: 15px;
-    color: rgb(219, 205, 205);
+    color:rgb(219, 205, 205);
 
 }
 
 .error-show {
-    color: rgb(219, 205, 205);
+    color:rgb(219, 205, 205);
     text-align: left;
     margin-right: 20px;
+}
+
+/************** Cloud Animation **************/
+
+@keyframes moveClouds {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.weather::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20%;
+    background: url("assets/images/clouds.png"),url("assets/images/heavy-rain.png");
+    background-repeat: repeat-x;
+    animation: moveClouds 40s linear infinite;
 }
