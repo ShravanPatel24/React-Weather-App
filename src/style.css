@@ -46,7 +46,7 @@ width: 20px;
 
 .weatherinfo .icon{
     margin-top: 20px;
-    width: 170px;
+    width: 100%;
 }
 .weatherinfo h1{
     font-size: 70px;
@@ -89,4 +89,10 @@ margin-right: 10px;
 }
 .humidity-text p .wind-text p{
 margin: 0px;    
+}
+.error-show{
+    color: red;
+    text-align: left;
+    margin-right: 20px;
+
 }

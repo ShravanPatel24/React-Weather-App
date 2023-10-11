@@ -1,0 +1,14 @@
+ let imagePath = "";
+            if(res.data.weather[0].main =="clouds"){
+                imagePath={cloud}}
+               else if(res.data.weather[0].main =="rain"){
+                    imagePath={rain}
+                    if(res.data.weather[0].main =="Drizzle"){
+                        imagePath={mist}
+
+import cloud from "./assets/images/cloud.png"
+import humidity from "./assets/images/humidity.png"
+import wind from "./assets/images/wind.png"
+import rain from "./assets/images/heavy-rain.png"
+import drizzle from "./assets/images/drizzle.png"
+                        
