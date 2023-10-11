@@ -21,7 +21,7 @@ function Weather() {
     })
     const [name, setName] = useState("")
     const [error, setError] = useState([]);
-  
+
 
 
     const handleClick = () => {
@@ -47,63 +47,76 @@ function Weather() {
 
                     console.log(res.data)
                     setData({ ...data, celcius: (res.data.main.temp - 273.15).toFixed(2), name: res.data.name, humidity: res.data.main.humidity, speed: res.data.wind.speed, image: imagePath })
-                    setError("");    })
-             .catch(err => {
-                if(err.response.status == 404){
-                    setError("invalid city name")
-                    }else{
+                    setError("");
+                })
+                .catch(err => {
+                    if (err.response.status == 404) {
+                        setError("invalid city name")
+                    } else {
                         setError("");
                     }
-                    console.log(err);   
-            });
-    } else {
-       alert("Empty city name");
+                    console.log(err);
+                });
+        } else {
+            alert("Empty city name");
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        console.log("handleKeyDown called");
+        if (e.key === 'Enter') {
+            handleClick();
+        }
     }
-};
-
-
-    
-
 
     return (
-        <div className='container'>
-            <div className='weather'>
-                <div className='search' >
-                    <input type="text" placeholder='Enter City Name' value={name}
-                        onChange={e => setName(e.target.value)}
-                       />
-                    <button>
-                        <img src={Search} onClick={handleClick} alt="Search" />
-                    </button>
+        <div className="content">
+            <div className='container'>
+                <div className="text-header">
+                    <h1> Weather Application</h1>
                 </div>
+                <div className=' weather '>
+                    <div className='search' >
+                        <input type="text" placeholder='Enter City Name' value={name}
+                            onChange={e => setName(e.target.value)}
+                            onKeyDown={handleKeyDown} />
+                        <button >
+                            <img src={Search} onClick={handleClick} alt="Search" />
+                        </button>
+                    </div >
                     <div className="error-show">
                         <p>{error}</p>
                     </div>
-                <div className="weathrinfo">
-                    <img className='icon' src={data.image} alt="cloud" style={{ height: "100px", width: "100px" }} />
-                    <h1>{Math.round(data.celcius)}°C</h1>
-                    <h2>{data.name}</h2>
-                    <div className="details">
-                        <div className="col">
-                            <img className='humidity' src={humidity} alt="humidity" />
-                            <div className='text-humidity' >
-                                <p>{Math.round(data.humidity)}</p>
-                                <p>Humidity</p>
+                    <div className="weather-container">
+                        <div className="weathr-info">
+                            <div className="weather-img">
+                            <img className='icon' src={data.image} alt="cloud" />
                             </div>
-                        </div>
-                        <div className="col">
-                            <img className='wind' src={wind} alt="wind" />
-                            <div className=' text-wind'>
-                                <p>{data.speed}km/h</p>
-                                <p>Wind</p>
-                            </div>
-                            <h1></h1>
-                        </div>
+                            <div className="name-city">
 
+                            <h2>{Math.round(data.celcius)}°C</h2>
+                            <p>{data.name}</p>
+                            </div>
+                            </div>
+                            <div className="details">
+                                <div className="col">
+                                    <img className='humidity' src={humidity} alt="humidity" />
+                                    <div className='text-humidity' >
+                                        <p className='text-humidity'>{Math.round(data.humidity)}</p>
+                                        <p className='humidity-name'>Humidity</p>
+                                    </div>
+                                </div>
+                                <div className="col">
+                                    <img className='wind' src={wind} alt="wind" />
+                                    <div className=' text-wind'>
+                                        <p>{data.speed} km/h</p>
+                                        <p className='wind-name'>Wind</p>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }
