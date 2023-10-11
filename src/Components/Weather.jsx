@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import Search from "./assets/images/vector.png"
-import cloud from "./assets/images/cloud.png"
-import clouds from "./assets/images/clouds.png"
-import humidity from "./assets/images/humidity.png"
-import wind from "./assets/images/wind.png"
-import clear from "./assets/images/01_sunny_color.png"
-import mist from "./assets/images/mist.png"
-import rain from "./assets/images/heavy-rain.png"
-import drizzle from "./assets/images/drizzle.png"
-import "./style.css"
+import Search from "../assets/images/vector.png"
+import cloud from "../assets/images/cloud.png"
+import clouds from "../assets/images/clouds.png"
+import humidity from "../assets/images/humidity.png"
+import wind from "../assets/images/wind.png"
+import clear from "../assets/images/01_sunny_color.png"
+import mist from "../assets/images/mist.png"
+import rain from "../assets/images/heavy-rain.png"
+import drizzle from "../assets/images/drizzle.png"
+import "../style.css"
 import axios from 'axios';
 
-function Home() {
+function Weather() {
     const [data, setData] = useState({
         celcius: 10,
         name: "Canada",
@@ -21,9 +21,9 @@ function Home() {
     })
     const [name, setName] = useState("")
     const [error, setError] = useState([]);
-    // useEffect(() => {
+  
 
-    // }, [])
+
     const handleClick = () => {
         if (name !== "") {
 
@@ -54,15 +54,15 @@ function Home() {
                     }else{
                         setError("");
                     }
-
-                    console.log(err);
-               
+                    console.log(err);   
             });
     } else {
        alert("Empty city name");
     }
 };
 
+
+    
 
 
     return (
@@ -71,7 +71,7 @@ function Home() {
                 <div className='search' >
                     <input type="text" placeholder='Enter City Name' value={name}
                         onChange={e => setName(e.target.value)}
-                      />
+                       />
                     <button>
                         <img src={Search} onClick={handleClick} alt="Search" />
                     </button>
@@ -108,4 +108,4 @@ function Home() {
     )
 }
 
-export default Home
+export default Weather
