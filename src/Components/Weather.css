@@ -1,0 +1,226 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;900&family=Oxygen&family=Poppins:wght@500&family=Syne:wght@500;700&family=Uncial+Antiqua&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Poppins";
+  margin: 0;
+  background-color: rgb(191, 235, 245);
+  overflow: hidden;
+}
+
+.container {
+  margin: 0 auto;
+  width: 95%;
+}
+
+.text-header {
+  padding: 20px;
+  font-size: 25px;
+  font-weight: 700;
+  color: rgb(22, 81, 124);
+}
+
+/****************** Weather Component Styles ***************/
+
+.weather {
+  width: 400px;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  color: white;
+  background: linear-gradient(130deg, rgb(83, 83, 183), rgb(25, 114, 58));
+  margin: 0 auto;
+  position: relative;
+  /* box-shadow: 0 4px 8px rgba(37, 210, 109, 0.2); */
+  transition: background 0.3s ease-in-out;
+}
+
+.weather:hover {
+  background: linear-gradient(130deg, rgb(25, 114, 58), rgb(83, 83, 183));
+  box-shadow: 0 8px 16px rgba(37, 210, 109, 0.4);
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.search input {
+  border: none;
+  outline: 0;
+  padding: 12px 25px;
+  font-size: 18px;
+  background-color: rgb(222, 237, 243);
+  color: black;
+  border-radius: 30px;
+  flex: 1;
+  margin-right: 20px;
+}
+
+.search button {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: 0;
+  width: 50px;
+  /* height: 50px; */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/********** Weather Component - Image Search Button *********/
+
+.serch button img {
+  width: 100%;
+}
+
+.weather-container {
+  margin-top: 20px;
+}
+
+.weather-info {
+  margin-top: 10px;
+  width: 100px;
+}
+
+.weather-img {
+  margin: 0 auto;
+  width: 100px;
+  padding: 20px;
+}
+
+.weather-img img {
+  width: 100%;
+}
+
+.name-city {
+  padding: 20px;
+}
+
+.name-city h2 {
+  font-size: 40px;
+  font-weight: 700;
+  color: #efcaca;
+}
+
+.name-city p {
+  font-size: 30px;
+  font-weight: 500;
+  color: #dfb7b7;
+}
+
+/********** Weather Component - Weather Details **********/
+
+.details {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.humidity {
+  height: 50px;
+  width: 50px;
+  margin-right: 12px;
+}
+.humidity img {
+  width: 100%;
+}
+
+.wind {
+  height: 50px;
+  width: 40px;
+  margin-right: 12px;
+}
+
+.details .col {
+  display: flex;
+  align-items: center;
+  text-align: left;
+}
+
+details .col img {
+  width: 45px;
+  margin-right: 10px;
+}
+
+.text-humidity {
+  font-size: 20px;
+  color: #efcaca;
+}
+.humidity-name {
+  font-size: 15px;
+  color: rgb(219, 205, 205);
+}
+.text-wind {
+  font-size: 20px;
+  color: #efcaca;
+}
+.wind-name {
+  font-size: 15px;
+  color: rgb(219, 205, 205);
+}
+
+.error-show {
+  color: rgb(219, 205, 205);
+  text-align: left;
+  margin-right: 20px;
+}
+
+/* Suggestion City */
+.suggestions-list {
+  list-style-type: none;
+  padding: 0;
+  border-top: none;
+  color: #000;
+  position: absolute;
+  z-index: 1;
+}
+
+.suggestions-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestions-list li:hover {
+  background-color: #f2f2f2;
+}
+
+/************** Cloud Animation **************/
+@keyframes moveClouds {
+  0%,
+  100% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+}
+
+.weather::before {
+  content: "";
+  position: absolute;
+  top: 80%;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: url("../assets/images/clouds.png"),
+    url("../assets/images/cloud.png");
+  background-repeat: repeat;
+  background-size: cover;
+  animation: moveClouds 30s linear infinite; /* Increase the duration to slow down */
+  z-index: -1;
+}
+
+@media screen and (max-width: 1024px) {
+  .weather::before {
+    top: 50%;
+    animation: moveClouds 60s linear infinite; /* Adjust the duration for smaller screens */
+  }
+}

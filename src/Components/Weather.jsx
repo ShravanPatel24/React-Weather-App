@@ -1,138 +1,201 @@
-import React, { useEffect, useState } from 'react'
-import Search from "../assets/images/vector.png"
-import clouds from "../assets/images/clouds.png"
-import humidity from "../assets/images/humidity.png"
-import wind from "../assets/images/wind.png"
-import clear from "../assets/images/01_sunny_color.png"
-import mist from "../assets/images/mist.png"
-import rain from "../assets/images/heavy-rain.png"
-import drizzle from "../assets/images/drizzle.png"
-import defaultWeather from "../assets/images/season.png"
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState, useEffect } from "react";
+import Search from "../assets/images/vector.png";
+import "./Weather.css";
+import humidity from "../assets/images/humidity.png";
+import wind from "../assets/images/wind.png";
+import defaultWeather from "../assets/images/season.png";
+import weatherCodes from "./WeatherCode";
 
-import "../style.css"
-import axios from 'axios';
+const initialWeatherState = {
+  celcius: "",
+  name: "",
+  humidity: "",
+  speed: 0,
+  image: defaultWeather,
+  isDay: true,
+  description: "",
+  country: "IN",
+};
 
 function Weather() {
-    const [data, setData] = useState({
-        celcius: "",
-        name: "",
-        humidity: "",
-        speed: 0,
-        image: defaultWeather
-    });
+  // Set default data for the Weather component
+  const [data, setData] = useState(initialWeatherState);
+  // State to manage user input (city name)
+  const [name, setName] = useState("");
+  // State to manage error messages
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-    const [name, setName] = useState("")
-    const [error, setError] = useState([]);
-
-    const handleClick = () => {
-        if (name !== "") {
-            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=3db677f7a7bb7245ccd673d4112c6d1a&units=matric`
-
-            axios.get(apiUrl)
-                .then(res => {
-                    let imagePath = "";
-                    if (res.data.weather[0].main === "Clouds") {
-                        imagePath = clouds;
-                    } else if (res.data.weather[0].main === "Clear") {
-                        imagePath = clear;
-                    } else if (res.data.weather[0].main === "Rain") {
-                        imagePath = rain;
-                    } else if (res.data.weather[0].main === "Drizzle") {
-                        imagePath = drizzle;
-                    } else if (res.data.weather[0].main === "Mist") {
-                        imagePath = mist;
-                    } else if (res.data.weather[0].main === "Haze") {
-                        imagePath = mist;
-                    }
-                    console.log(res.data)
-                    setData({ ...data, celcius: (res.data.main.temp - 273.15).toFixed(2), name: res.data.name, humidity: res.data.main.humidity, speed: res.data.wind.speed, image: imagePath })
-                    setError("");
-                })
-                .catch(err => {
-                    if (err.response.status == 404) {
-                        setError("invalid city name")
-                    } else {
-                        setError("");
-                    }
-                    console.log(err);
-                });
-        } else {
-            toast.error(
-                "Enter your city",
-                {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-
-                }
-
-            );
-        }
+  useEffect(() => {
+    const fetchData = () => {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 5000);
     };
 
-    const handleKeyDown = (e) => {
-        console.log("handleKeyDown called");
-        if (e.key === 'Enter') {
-            handleClick();
+    fetchData();
+  }, []);
+
+  //****  DEbounce ***8//
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return function (...args) {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+
+  const fetchData = async () => {
+    if (name !== "") {
+      try {
+        setIsLoading(true);
+        const apiKey = process.env.REACT_APP_OPEN_WEATHER_API_KEY;
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${apiKey}&units=metric`;
+
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+          throw new Error(`City not found: ${response.status}`);
         }
+
+        const data = await response.json();
+        const iconCode = data.weather[0].icon;
+        let imagePath = defaultWeather;
+
+        if (iconCode in weatherCodes) {
+          imagePath = weatherCodes[iconCode];
+        }
+
+        // Create a new image element
+        const img = new Image();
+
+        // Set the onLoad event for the image
+        img.onload = () => {
+          // Once the image is loaded, update the state with the fetched data
+          setData({
+            celcius: data.main.temp.toFixed(2),
+            name: data.name,
+            humidity: data.main.humidity,
+            speed: data.wind.speed,
+            image: imagePath,
+            description: data.weather[0].description,
+            country: data.sys.country,
+          });
+
+          // Clear any previous errors
+          setError("");
+
+          // Set isLoading to false after both data and image have loaded
+          setIsLoading(false);
+        };
+
+        // Set the source for the image
+        img.src = imagePath;
+      } catch (error) {
+        if (error.message.includes("City not found")) {
+          setError("Invalid City Name");
+          setData(initialWeatherState);
+          setIsLoading(false);
+        } else {
+          setError("");
+          setIsLoading(false);
+        }
+      }
+    } else {
+      setData(initialWeatherState);
+      setError("Enter Your City Name");
     }
+  };
 
-    return (
-        <div className="content">
-            <div className='container'>
-                <div className="text-header">
-                    <h1> Weather Application</h1>
-                </div>
-                <div className=' weather '>
-                    <div className='search' >
-                        <input type="text"
-                            placeholder='Enter City Name'
-                            value={name}
-                            onChange={e => setName(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                        />
-                        <button >
-                            <img src={Search} onClick={handleClick} alt="Search" />
-                        </button>
-                    </div >
-                    <div className="error-show">
-                        <p>{error}</p>
-                    </div>
-                    <div className="weather-container">
-                        <div className="weathr-info">
-                            <div className="weather-img">
-                                <img className='icon' src={data.image} alt="cloud" />
-                            </div>
-                            <div className="name-city">
-                                <h2>{Math.round(data.celcius)}°C</h2>
-                                <p>{data.name}</p>
-                            </div>
-                        </div>
-                        <div className="details">
-                            <div className="col">
-                                <img className='humidity' src={humidity} alt="humidity" />
-                                <div className='text-humidity' >
-                                    <p>{Math.round(data.humidity)}</p>
-                                    <p className='humidity-name'>Humidity</p>
-                                </div>
-                            </div>
-                            <div className="col">
-                                <img className='wind' src={wind} alt="wind" />
-                                <div className=' text-wind'>
-                                    <p>{data.speed} km/h</p>
-                                    <p className='wind-name'>Wind</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <ToastContainer />
+  // Debounce the fetchData function to avoid rapid API calls
+  const handleClick = debounce(fetchData, 500);
 
+  //  Event handler for input change
+  const handleInputChange = (e) => {
+    const inputText = e.target.value;
+    setName(inputText);
+    if (inputText === "") {
+      setError(""); // Clear the error message when input is empty
+      setData(initialWeatherState); // Clear the data when input is empty
+    }
+  };
+
+  // Event handler for Enter key press
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleClick();
+    }
+  };
+
+  return (
+    <div className="container">
+      <div className="text-header">
+        <h1 style={{ textAlign: "center" }}> Weather Application</h1>
+      </div>
+      <div className=" weather ">
+        <div className="search">
+          <input
+            type="text"
+            placeholder="Enter City Name"
+            value={name}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+          />
+          <button>
+            <img src={Search} onClick={handleClick} alt="Search" />
+          </button>
         </div>
-    )
+        <div className="error-show">
+          <p>{error}</p>
+        </div>
+
+        <div className="weather-container">
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : (
+            <>
+              <div className="weathr-info">
+                <div className="weather-img">
+                  <img className="icon" src={data.image} alt="icon" />
+                </div>
+                <div className="disc-text">
+                  <p>{data.description}</p>
+                </div>
+
+                <div className="name-city">
+                  <h2>{Math.round(data.celcius)}°C</h2>
+                  <div className="name-countary">
+                    <p>{data.name} </p>
+                    <p>{`(${data.country})`}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="details">
+                <div className="col">
+                  <img className="humidity" src={humidity} alt="humidity" />
+                  <div className="text-humidity">
+                    <p>{Math.round(data.humidity)}</p>
+                    <p className="humidity-name">Humidity</p>
+                  </div>
+                </div>
+                <div className="col">
+                  <img className="wind" src={wind} alt="wind" />
+                  <div className=" text-wind">
+                    <p>{data.speed} km/h</p>
+                    <p className="wind-name">Wind</p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default Weather
+export default Weather;
